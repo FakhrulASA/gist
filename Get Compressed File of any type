@@ -1,0 +1,25 @@
+fun getFileFromUriAsPng(context: Context, uri: Uri): File? {
+    try {
+        // Decode the image from the URI
+        val inputStream = context.contentResolver.openInputStream(uri) ?: return null
+        val bitmap = BitmapFactory.decodeStream(inputStream)
+
+        // Create a file in the cache directory to save the PNG image
+        val pngFile = File(context.cacheDir, "profile.jpeg")
+
+        // Compress and save the bitmap as a PNG file
+        val outputStream = FileOutputStream(pngFile)
+        bitmap.compress(
+            Bitmap.CompressFormat.JPEG,
+            30,
+            outputStream
+        )  // 100 means no compression, you can adjust this value
+        outputStream.flush()
+        outputStream.close()
+
+        return pngFile
+    } catch (e: Exception) {
+        e.printStackTrace()
+        return null
+    }
+}

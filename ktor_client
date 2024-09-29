@@ -1,0 +1,38 @@
+fun provideHttpClient(): HttpClient {
+    val defaultHeader = mapOf(
+        "Authorization" to "Bearer YOUR_TOKEN_HERE",
+        "Custom-Header" to "HeaderValue"
+    )
+    return HttpClient(CIO) {
+        install(ContentNegotiation) {
+            json(Json {
+                prettyPrint = true
+                isLenient = true
+                ignoreUnknownKeys = true
+            })
+        }
+
+        defaultRequest {
+            headers {
+                defaultHeader.forEach { (key, value) ->
+                    headers.append(key, value)
+                }
+            }
+
+        } 
+    }
+}
+
+
+    override suspend fun validateEmail(emailValidatorRequestModel: EmailValidatorRequestModel): EmailValidatorResponseModel {
+        // Making the GET request to validate email
+        return httpClient.get("$baseUrl/validate-email") {
+            contentType(io.ktor.http.ContentType.Application.Json)
+            setBody(emailValidatorRequestModel)
+            /**
+             * If you want to send parameter
+             */
+//          parameter("email", email)
+
+        }.body() // Automatically deserializes into EmailValidatorResponseModel
+    }

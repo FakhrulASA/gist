@@ -1,0 +1,14 @@
+// in your widget
+val viewModel = viewModel<YourViewModel>()
+val initialData by viewmodel.collectAsStateWithLifecycle()
+
+// in viewmodel class
+private val _initialData = MutableStateFlow(false)
+val initialData = _initialData 
+    .onStart(loadTheData()}
+    .stateIn(
+        viewModelScope,
+        //Time is to define after how many second it will reload data
+        SharingStarted,WhileSubscribed(10000L),
+        false
+        )
